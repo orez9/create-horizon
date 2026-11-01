@@ -12,6 +12,7 @@
 //! - Two **perpendicular large cogs**, one block off along both their axes,
 //!   mesh like bevel gears: the rim velocities at the shared point give
 //!   `ω_b = ω_a · sign(Δ_a) · sign(Δ_b)`, Δ the offset along each one's axis.
+//! - **Encased chain drives** of the same axis side by side share a chain: +1.
 
 use crate::block::{Cog, KineticBlock};
 use crate::geometry::{Face, Pos};
@@ -26,7 +27,11 @@ pub fn ratio(a: &KineticBlock, b: &KineticBlock, diff: Pos) -> f32 {
         if shaft != 0.0 {
             return shaft;
         }
-        return small_cog_ratio(a, b, face);
+        let cogs = small_cog_ratio(a, b, face);
+        if cogs != 0.0 {
+            return cogs;
+        }
+        return chain_ratio(a, b, face);
     }
     edge_ratio(a, b, diff)
 }
@@ -45,6 +50,14 @@ fn small_cog_ratio(a: &KineticBlock, b: &KineticBlock, face: Face) -> f32 {
     let meshing =
         a.cog == Cog::Small && b.cog == Cog::Small && a.axis == b.axis && face.axis != a.axis;
     if meshing { -1.0 } else { 0.0 }
+}
+
+/// Encased chain drives of the same axis side by side (across a face perpendicular to the axis)
+/// share a chain: same speed, same direction.
+fn chain_ratio(a: &KineticBlock, b: &KineticBlock, face: Face) -> f32 {
+    let linked =
+        a.cog == Cog::Chain && b.cog == Cog::Chain && a.axis == b.axis && face.axis != a.axis;
+    if linked { 1.0 } else { 0.0 }
 }
 
 fn edge_ratio(a: &KineticBlock, b: &KineticBlock, diff: Pos) -> f32 {
