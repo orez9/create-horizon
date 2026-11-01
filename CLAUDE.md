@@ -42,6 +42,22 @@ Gearbox port speed = W · sign(face) · σ(face.axis), σ = +1 for the first oth
 4. Hand crank (use → spins for a few ticks), water wheel, creative motor; goggles tooltip (stress/RPM).
 5. Machines: press, millstone, fan processing, then belts/depots, then contraptions.
 
+## Where we are (handover from the first, cloud session)
+
+- The owner plays on **Windows**. Testing loop: push to GitHub → launcher Mods → "Add from GitHub"
+  (`https://github.com/orez9/create-horizon`, the repo must be public) → Native build → play. The bundle
+  already installs and builds (template example hook only; nothing visible in game yet).
+- The launcher has an MCP server (`horizon-launcher.exe mcp`, 179 tools): add it to local Claude Code to
+  install mods, build and drive the game. The launcher must live in a permanent ASCII-only folder (not a
+  RAR temp folder).
+- **Create is not installed yet.** Mod browser hides it by default (no 26.3 build): use **Show everything**
+  or filter 1.21.1 / NeoForge, install into the same instance, restart, enable in Options > Mods.
+- **Open question, blocks step 2:** after Create is carried, which `create:*` blocks exist and with which
+  vanilla templates? The verdict "Partly" lists what didn't port ("blocks with no vanilla block to copy" may
+  include shafts/cogs). If they're missing, this mod must declare those blocks itself
+  (`data/create/horizon/block/*.json`, a template with a block entity) and use Create's carried assets only.
+  Check in game: creative search `cog` / `shaft`.
+
 ## Validate
 
 ```sh
