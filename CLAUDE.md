@@ -42,6 +42,30 @@ Gearbox port speed = W · sign(face) · σ(face.axis), σ = +1 for the first oth
 4. Hand crank (use → spins for a few ticks), water wheel, creative motor; goggles tooltip (stress/RPM).
 5. Machines: press, millstone, fan processing, then belts/depots, then contraptions.
 
+## Findings from the first local session (2026-11-01)
+
+- Create 6.0.10 is carried (542 blocks; 101 left out, among them gearshift, clutch, encased cogs, chain drive,
+  belt, speedometer, stressometer, large water wheel, steam engine: this mod must declare those itself).
+- The carry gives kinetic blocks log/stairs templates, with no block entity. `declare.rs` (hook `component_types`,
+  before content loads) rewrites their declarations to the template `minecraft:conduit` in the player's own
+  `horizon-mods/create`. Nothing of Create's is committed.
+- Horizon's registry wants properties sorted by name with declared ones varying fastest, so a declared property
+  must sort after the template's `waterlogged` or the game refuses to load. Hence `zaxis`/`zfacing`, with the carried
+  blockstates' variant keys renamed to match. Set `default_state` `waterlogged=false` (the conduit's default is true).
+- Shapes select on template properties only, so a shaft's box is a cross for every axis (not 1:1 yet).
+- Pinned to Horizon `5bbecdc` (API 80) because the newest Nightly has API 42 and drawing needs 71. Move to a Nightly
+  as soon as one has it.
+- Verified in game: motor → shaft → cog (reverses) → gearbox → shaft speeds, hand crank 32 RPM then stop, stopping when
+  the source goes, placing by clicked face (top and side), drawing with rotation.
+- Not done: breaking a block on conflict/too fast (the network only stops), persistence across a restart untested,
+  cog offset for large cogs, a gearbox's half shafts, `tools/test_template.py` still expects the template's one injection.
+
+**Windows build:** run `native-build` in a real terminal tab, not this agent's Bash/PowerShell tools: from those, rustc
+fails with os error 32 on its temp files. After a failed build move `native/stage.new` aside or the next one stops with
+`E_ATOMIC_STAGE`. Delete `.horizon-cache/mod-content` before launching after changing carried files, or it may fail to
+rebuild with os error 32. The first load after that takes about 3 minutes, so `play` reports no control socket after 2:
+that is not a failure, and the first `game_*` call may report "not under agent control".
+
 ## Where we are (handover from the first, cloud session)
 
 - The owner plays on **Windows**. Testing loop: push to GitHub → launcher Mods → "Add from GitHub"
@@ -50,13 +74,7 @@ Gearbox port speed = W · sign(face) · σ(face.axis), σ = +1 for the first oth
 - The launcher has an MCP server (`horizon-launcher.exe mcp`, 179 tools): add it to local Claude Code to
   install mods, build and drive the game. The launcher must live in a permanent ASCII-only folder (not a
   RAR temp folder).
-- **Create is not installed yet.** Mod browser hides it by default (no 26.3 build): use **Show everything**
-  or filter 1.21.1 / NeoForge, install into the same instance, restart, enable in Options > Mods.
-- **Open question, blocks step 2:** after Create is carried, which `create:*` blocks exist and with which
-  vanilla templates? The verdict "Partly" lists what didn't port ("blocks with no vanilla block to copy" may
-  include shafts/cogs). If they're missing, this mod must declare those blocks itself
-  (`data/create/horizon/block/*.json`, a template with a block entity) and use Create's carried assets only.
-  Check in game: creative search `cog` / `shaft`.
+- Create installs through the mod browser with **Show everything** (no 26.3 build), into the same instance.
 
 ## Validate
 

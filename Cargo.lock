@@ -5,6 +5,9 @@ version = 4
 [[package]]
 name = "create-horizon"
 version = "0.1.0"
+dependencies = [
+ "create_horizon_engine",
+]
 
 [[package]]
 name = "create_horizon_engine"

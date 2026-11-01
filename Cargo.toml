@@ -10,6 +10,9 @@ description = "Create-style rotational power for Horizon (native mod glue)"
 # This exact source is also injected as a same-crate module by horizon-mixins.
 path = "mixins/create_horizon/runtime.rs"
 
+[dependencies]
+create_horizon_engine = { path = "mixins/create_horizon/engine" }
+
 [workspace]
 members = ["tools/audit", "mixins/create_horizon/engine"]
 resolver = "2"
