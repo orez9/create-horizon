@@ -10,11 +10,13 @@ pub mod block;
 pub mod connect;
 pub mod geometry;
 pub mod network;
+pub mod sources;
 pub mod values;
 
 pub use block::{Cog, KineticBlock, Source};
 pub use geometry::{Axis, Face, Pos};
 pub use network::{KineticWorld, Limits, Network, State, solve};
+pub use sources::{HandCrank, WaterFlow};
 
 /// Degrees a block turning at `rpm` has turned after `ticks` game ticks
 /// (20 a second), wrapped to 0..360.
@@ -25,3 +27,5 @@ pub fn angle_degrees(rpm: f32, ticks: f64) -> f32 {
 
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_sources;

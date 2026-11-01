@@ -210,12 +210,13 @@ fn the_fastest_source_drives_and_capacities_add() {
     w.insert([1, 0, 0], KineticBlock::shaft(Axis::X));
     w.insert(
         [2, 0, 0],
-        KineticBlock::shaft(Axis::X).with_source(8.0, values::WATER_WHEEL_CAPACITY),
+        KineticBlock::shaft(Axis::X).with_source(8.0, 16.0),
     );
     let n = run(&w, [1, 0, 0]);
     assert_eq!(n.state, State::Running);
     assert_eq!(n.speed([2, 0, 0]), 32.0);
-    assert_eq!(n.capacity, 32.0 * 8.0 + 8.0 * 32.0);
+    // Each source counts at its own speed, not the network's.
+    assert_eq!(n.capacity, 32.0 * 8.0 + 8.0 * 16.0);
 }
 
 #[test]

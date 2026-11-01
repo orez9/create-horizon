@@ -15,6 +15,10 @@ pub enum Cog {
     /// A large cogwheel: meshes with small cogs across an edge (2:1) and
     /// with perpendicular large cogs.
     Large,
+    /// An encased chain drive: a chain inside the casing links it to an encased chain drive of
+    /// the same axis beside it, turning together (same speed, same direction, as a chain or belt
+    /// does: no meshing reversal).
+    Chain,
 }
 
 /// A rotation source's output.
@@ -88,6 +92,35 @@ impl KineticBlock {
         block
     }
 
+    /// A gearshift: a shaft through a casing along `axis`. Unpowered it passes rotation straight
+    /// on; powered by redstone, its far end turns the other way (public gameplay description:
+    /// "reverses rotation when powered"). Modelled as a gearbox-flagged block whose two ports lie
+    /// on its own axis, which `port_factor` reverses.
+    pub fn gearshift(axis: Axis, powered: bool) -> KineticBlock {
+        let mut block = Self::shaft(axis);
+        block.gearbox = powered;
+        block
+    }
+
+    /// A clutch: a shaft through a casing along `axis`. Powered by redstone it disconnects: no
+    /// rotation passes through, and the block itself joins neither side.
+    pub fn clutch(axis: Axis, powered: bool) -> KineticBlock {
+        let mut block = Self::shaft(axis);
+        if powered {
+            block.shaft_faces = 0;
+        }
+        block
+    }
+
+    /// An encased chain drive along `axis`: shafts on both ends, and a chain to encased chain
+    /// drives of the same axis beside it.
+    pub fn encased_chain_drive(axis: Axis) -> KineticBlock {
+        KineticBlock {
+            cog: Cog::Chain,
+            ..Self::shaft(axis)
+        }
+    }
+
     /// A block with a single shaft end, on `face` (a hand crank, a motor).
     pub fn single_shaft(face: Face) -> KineticBlock {
         let mut block = Self::base(face.axis);
@@ -124,6 +157,10 @@ impl KineticBlock {
         }
         if !self.gearbox {
             return 1.0;
+        }
+        if face.axis == self.axis {
+            // A powered gearshift (see `gearshift`): its two ends turn opposite ways.
+            return face.sign() as f32;
         }
         let sigma = if face.axis == self.axis.others()[0] {
             1.0
