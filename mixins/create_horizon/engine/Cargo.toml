@@ -1,0 +1,11 @@
+[package]
+name = "create_horizon_engine"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+description = "Rotational power simulation for the create_horizon native mod: no game types, fully unit-tested"
+
+# No dependencies on purpose: a bundle crate may only use crates already in
+# Horizon's Cargo.lock, and this one needs none.
+[dependencies]

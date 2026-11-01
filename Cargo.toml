@@ -1,0 +1,15 @@
+[package]
+name = "create-horizon"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+description = "Create-style rotational power for Horizon (native mod glue)"
+
+[lib]
+# This exact source is also injected as a same-crate module by horizon-mixins.
+path = "mixins/create_horizon/runtime.rs"
+
+[workspace]
+members = ["tools/audit", "mixins/create_horizon/engine"]
+resolver = "2"

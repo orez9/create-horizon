@@ -1,0 +1,7 @@
+create_horizon is an independent, unofficial reimplementation of the gameplay of the Create mod
+(https://github.com/Creators-of-Create/Create) for Horizon. It is not affiliated with or endorsed by
+the Create team, Horizon, Mojang or Microsoft. "Create" belongs to The Create Team.
+
+This repository contains no code, textures, models, sounds or translations from Create. Create's
+assets are All Rights Reserved; players supply them from their own copy of the official Create jar,
+which Horizon reads at run time.
