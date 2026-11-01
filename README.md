@@ -50,7 +50,7 @@ Cargo.toml                         Standalone runtime library + source audit wor
 compatibility.json                 Exact upstream/tool revisions and source hashes
 mixins/example_mod/
   horizon-mixin.toml                Module and HEAD declaration
-  break.rs                         Small typed hook adapter
+  *.rs                             Small typed hook adapters
   runtime.rs                       Runtime implementation and unit tests (single source)
 tools/horizon.py                   Export → plan → apply → check/build/test
 tools/test_template.py             Tiny compiled fixture; no Horizon checkout/assets needed
@@ -62,7 +62,7 @@ To rename the example:
 
 1. Change Cargo package name/description and the manifest's mod ID/version.
 2. Rename `mixins/example_mod/` and update the Cargo `[lib].path`.
-3. Change the manifest module name `example_mod` and its reference in `break.rs`.
+3. Change the manifest module name `example_mod` and its reference in the helpers`.
 4. Change the runtime log prefix, unit-test expectation and the native test filter
    `game::example_mod::tests` in `tools/horizon.py`.
 5. Run `cargo generate-lockfile --offline` after renaming the Cargo package and
